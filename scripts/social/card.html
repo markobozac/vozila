@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="hr"><head><meta charset="utf-8">
+<style>
+html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+body{background:radial-gradient(120% 140% at 85% 30%,#34405a 0%,#1b2433 48%,#0f141d 100%);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#fff;position:relative}
+svg{position:absolute;right:-150px;top:-30px;height:700px;width:auto;opacity:.95}
+body::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,20,29,.95) 0%,rgba(15,20,29,.75) 45%,rgba(15,20,29,0) 70%)}
+.t,.f,.u{z-index:1}
+.t{position:absolute;left:64px;top:70px;width:560px}
+h1{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:60px;line-height:1.04;margin:0 0 22px;font-weight:600}
+p{font-size:25px;line-height:1.4;color:#cfd6e2;margin:0}
+.f{position:absolute;left:64px;bottom:58px;display:flex;gap:36px;font-size:18px;color:#cfd6e2}
+.f b{display:block;font-size:34px;color:#fff;font-weight:650}
+.u{position:absolute;left:64px;top:30px;font-size:17px;color:#9fb0c6;letter-spacing:.04em}
+</style></head><body>
+<svg id="m"></svg>
+<div class="t"><h1>Vozila i autoosiguranje u Hrvatskoj</h1><p>Karta rizika po županijama, starenje voznog parka te premije i štete autoodgovornosti.</p></div>
+<div class="f" id="f"></div>
+<div class="u">markobozac.com/vozila</div>
+<script src="../../site/data.js"></script>
+<script>
+const D=window.D,g=D.geo,m=document.getElementById('m');m.setAttribute('viewBox',`0 0 ${g.w} ${g.h}`);
+const br=[80,90,100,110,125,150],cs=['#2f6f8f','#7fb0c6','#cfe0e6','#f3d2b3','#e39a5c','#c2611f','#8a3510'];
+const by=new Map(D.areas.map(a=>[a.id,a]));const col=v=>{let i=0;while(i<br.length&&v>=br[i])i++;return cs[i]};
+m.innerHTML=g.shapes.map(s=>`<path d="${s.d}" fill="${col(by.get(s.a).r.risk)}" stroke="#0f141d" stroke-width="1.5"/>`).join('');
+const nf=(x,d=0)=>x.toLocaleString('hr-HR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const L=D.ins[D.ins.length-1];
+document.getElementById('f').innerHTML=[[nf(D.nat.veh/1e6,1)+' mil.','vozila'],[nf(100*D.tp.fail/D.tp.n,1)+' %','pada na tehničkom'],[nf(L.ao.prem)+' mil. €','premija AO 2025.']].map(([v,l])=>`<span><b>${v}</b>${l}</span>`).join('');
+</script></body></html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vozila i autoosiguranje u Hrvatskoj – karta rizika po županijama</title>
+<meta name="description" content="Prometne nesreće, stradali, neispravna vozila na tehničkom pregledu i starenje voznog parka po županijama, uz kretanje premija i šteta autoosiguranja. Otvoreni podaci MUP-a, CVH-a, DZS-a i HANFA-e.">
+<link rel="canonical" href="https://markobozac.com/vozila/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#1b2433">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vozila i autoosiguranje u Hrvatskoj">
+<meta property="og:description" content="Karta rizika po županijama: nesreće, težina posljedica i ispravnost vozila. Uz to starenje voznog parka, rast električnih vozila te premije i štete autoosiguranja.">
+<meta property="og:url" content="https://markobozac.com/vozila/">
+<meta property="og:locale" content="hr_HR">
+<meta property="og:site_name" content="Marko Božac">
+<meta property="og:image" content="https://markobozac.com/vozila/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Karta Hrvatske po županijama s indeksom rizika u prometu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vozila i autoosiguranje u Hrvatskoj">
+<meta name="twitter:description" content="Karta rizika po županijama, starenje voznog parka i kretanje premija i šteta autoosiguranja.">
+<meta name="twitter:image" content="https://markobozac.com/vozila/og-image.jpg">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <svg id="herobg" class="herobg" aria-hidden="true" focusable="false"></svg>
+  <div class="wrap">
+    <h1>Vozila i autoosiguranje u Hrvatskoj</h1>
+    <p class="lede">Gdje su nesreće češće, gdje teže završavaju i gdje su vozila u lošijem stanju. Uz to: koliko brzo vozni park stari i kako se to vidi u premijama i štetama autoosiguranja.</p>
+    <p class="herofig" id="herofig"></p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="kpis" id="kpis" aria-label="Ključni pokazatelji"></section>
+
+  <section class="mapblock" aria-labelledby="map-h">
+    <h2 id="map-h">Karta rizika po županijama</h2>
+    <p class="sub">Područja policijskih uprava, koja se poklapaju sa županijama. Iznimka je Policijska uprava zagrebačka, koja pokriva Grad Zagreb i Zagrebačku županiju. Klikni na županiju za detalje.</p>
+    <div class="mapctl">
+      <div class="metric-tabs" role="tablist" id="metricTabs"></div>
+    </div>
+    <div class="mapgrid">
+      <figure class="map" id="mapfig">
+        <svg id="map" role="img" aria-label="Karta županija"></svg>
+        <div class="legend" id="legend"></div>
+        <div class="tip" id="tip" hidden></div>
+        <figcaption id="metricNote" class="note"></figcaption>
+      </figure>
+      <aside class="panel" id="panel" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="insights" aria-labelledby="ins-h">
+    <h2 id="ins-h">Što podaci pokazuju</h2>
+    <div class="cards" id="insights"></div>
+  </section>
+
+  <section class="fleet" aria-labelledby="fleet-h">
+    <h2 id="fleet-h">Vozni park: sve veći, sve stariji, polako sve električniji</h2>
+    <p class="sub">Broj registriranih vozila raste svake godine, a većina novih registracija su rabljeni automobili iz uvoza. Udio električnih i hibridnih vozila brzo raste, ali s vrlo niske razine.</p>
+    <div class="trend2">
+      <figure class="chartbox"><figcaption>Registrirana motorna vozila (mil.), 31. 12.</figcaption><div id="chFleet"></div></figure>
+      <figure class="chartbox"><figcaption>Prosječna starost osobnih automobila na tehničkom pregledu (godine)</figcaption><div id="chAge"></div></figure>
+      <figure class="chartbox"><figcaption>Prve registracije osobnih automobila: nova i rabljena (tis.)</figcaption><div id="chNewUsed"></div><div class="leg2" id="lgNewUsed"></div></figure>
+      <figure class="chartbox"><figcaption>Električni i hibridni osobni automobili (tis.)</figcaption><div id="chEv"></div><div class="leg2" id="lgEv"></div></figure>
+    </div>
+    <h3 class="h3">Tko vozi kilometre</h3>
+    <p class="sub">Prijeđeni kilometri osobnih automobila u 2024. prema starosti vozila i vrsti goriva (DZS, procjena iz stanja putomjera na tehničkim pregledima).</p>
+    <div class="trend2">
+      <figure class="chartbox"><figcaption>Prema starosti vozila (mil. vozilo-km)</figcaption><div id="chVkmAge"></div></figure>
+      <figure class="chartbox"><figcaption>Prema vrsti goriva (mil. vozilo-km)</figcaption><div id="chVkmFuel"></div></figure>
+    </div>
+    <ul class="tnotes" id="fleetNotes"></ul>
+  </section>
+
+  <section class="ins" aria-labelledby="ins2-h">
+    <h2 id="ins2-h">Autoosiguranje: premije i štete</h2>
+    <p class="sub">Obvezno osiguranje od automobilske odgovornosti (AO) i kasko za cijelo tržište, prema statistici HANFA-e. Podataka po županijama nema, pa su ovdje nacionalni.</p>
+    <div class="tkpis" id="insKpis"></div>
+    <div class="trend2">
+      <figure class="chartbox"><figcaption>Autoodgovornost: premija i isplaćene štete (mil. €)</figcaption><div id="chAo"></div><div class="leg2" id="lgAo"></div></figure>
+      <figure class="chartbox"><figcaption>Kasko: premija i isplaćene štete (mil. €)</figcaption><div id="chKasko"></div><div class="leg2" id="lgKasko"></div></figure>
+    </div>
+    <h3 class="h3">Osobni automobili u autoodgovornosti</h3>
+    <p class="sub">Prosječna premija po polici, učestalost šteta (isplaćene štete na 100 polica) i prosječna isplaćena šteta. HANFA ove podatke po skupinama vozila za 2023. i 2024. nije objavila.</p>
+    <div class="tablewrap"><table id="aoCarsTable"></table></div>
+    <h3 class="h3">Autoodgovornost po skupinama vozila, 2025.</h3>
+    <div class="tablewrap"><table id="aoGroupsTable"></table></div>
+    <ul class="tnotes" id="insNotes"></ul>
+  </section>
+
+  <section class="rank" aria-labelledby="rank-h">
+    <h2 id="rank-h">Ljestvica županija</h2>
+    <p class="sub">Klikni na naslov stupca za sortiranje, a na redak za detalje na karti.</p>
+    <div class="tablewrap"><table id="rankTable"></table></div>
+  </section>
+
+  <section class="method" aria-labelledby="m-h">
+    <h2 id="m-h">Izvori i metodologija</h2>
+    <ul id="sources"></ul>
+    <p><b>Indeks rizika</b> je prosjek tri omjera prema prosjeku Hrvatske (100 = prosjek): učestalost (sve prometne nesreće u 2024. na 1.000 registriranih vozila), težina (poginuli i teško ozlijeđeni na 10.000 vozila, prosjek 2023. i 2024.) i stanje vozila (udio neispravnih na redovnom tehničkom pregledu u 2025.). Sva tri dijela imaju istu težinu. Indeks nije cjenik osiguranja: pokazuje gdje su javni pokazatelji rizika iznad ili ispod prosjeka.</p>
+    <p><b>Na što paziti.</b> Nesreće se bilježe prema mjestu događaja, a vozila prema mjestu registracije. Županije s autocestama i jakim tranzitom (Lika, Zadar, Šibenik) zato imaju visoke stope i zbog vozila registriranih drugdje. Postaje za tehnički pregled pridružene su županiji prema mjestu postaje. Udio električnih i hibridnih vozila po županijama zadnji je put objavljen za 2022. Premije do 2022. su zaračunate bruto premije, a od 2023. naplaćene premije (nova metodologija HANFA-e uz MSFI 17), pa skok 2023. dijelom dolazi i od promjene metodologije. Iznosi u kunama preračunati su po fiksnom tečaju 7,53450.</p>
+    <p class="by">Izradio <a href="https://markobozac.com/">Marko Božac</a>. Podaci preuzeti 18. 11. 2026. · <a href="#" id="cookieSettings">Postavke kolačića</a></p>
+  </section>
+</main>
+
+<script src="consent.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+name: Deploy to markobozac.com/vozila
+
+# The server pulls the public repo itself (site/_deploy.php), so no secrets are needed.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger pull deploy on the server
+        run: |
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            out=$(curl -sS --max-time 120 -w ' [%{http_code}]' "https://markobozac.com/vozila/_deploy.php?t=$GITHUB_RUN_ID-$i" || true)
+            echo "$out"
+            case "$out" in
+              *"$GITHUB_SHA"*) exit 0 ;;
+              *"up to date"*|*"deployed"*) echo "server is on another commit, retrying" ;;
+              *) echo "unexpected answer, retrying" ;;
+            esac
+            sleep 20
+          done
+          echo "::error::Deploy did not reach $GITHUB_SHA"; exit 1
+
+      - name: Check the live page
+        run: |
+          curl -fsS https://markobozac.com/vozila/ | grep -q "Vozila i autoosiguranje u Hrvatskoj"
+          echo "live: https://markobozac.com/vozila/"
