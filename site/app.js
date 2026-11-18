@@ -24,10 +24,10 @@
     { k: 'failPct', t: 'Neispravni na tehničkom', u: '%', d: 1,
       note: 'Udio vozila koja nisu prošla redovni tehnički pregled u 2025., prema postajama za tehnički pregled u županiji.' },
     { k: 'vehPer1k', t: 'Vozila na 1.000 stanovnika', u: '', d: 0,
-      note: 'Registrirana motorna vozila 31. 12. 2024. na 1.000 stanovnika. Uključuje i vozila tvrtki (rent-a-car, leasing) registrirana u županiji.' },
+      note: 'Registrirana motorna vozila 31. 12. 2024. na 1.000 stanovnika. Uključuje i vozila tvrtki (rent-a-car, leasing) registrirana u županiji. Više vozila znači veću izloženost riziku, pa je na karti označeno kao lošije.' },
     { k: 'growth', t: 'Rast voznog parka', u: '%', d: 0,
-      note: 'Promjena broja registriranih motornih vozila od 31. 12. 2015. do 31. 12. 2024.' },
-    { k: 'altPct', t: 'Električni i hibridni', u: '%', d: 1,
+      note: 'Promjena broja registriranih motornih vozila od 31. 12. 2015. do 31. 12. 2024. Brži rast znači brži rast izloženosti riziku, pa je na karti označen kao lošije.' },
+    { k: 'altPct', t: 'Električni i hibridni', u: '%', d: 1, good: 'high',
       note: 'Udio električnih, hibridnih i plug-in hibridnih u osobnim automobilima, stanje 2022. (zadnji objavljeni podaci po županijama).' },
   ];
   let metric = METRICS[0];
@@ -38,13 +38,17 @@
   // colour scales
   const SEQ = ['--sea-0', '--sea-1', '--sea-2', '--sea-3', '--sea-4', '--sea-5', '--sea-6'];
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-  function classes(m) {
-    if (m.div) return { breaks: [80, 90, 100, 110, 125, 150], colors: ['#3a4592', '#7a86cc', '#d3d8f1', '#fbe6b4', '#f4c04e', '#e08a1e', '#b4471b'], labels: null };
-    const vs = A.map(a => val(a, m.k)).sort((x, y) => x - y);
-    const q = p => vs[Math.min(vs.length - 1, Math.floor(p * vs.length))];
-    const breaks = [q(.2), q(.4), q(.6), q(.8)];
-    return { breaks, colors: [css(SEQ[1]), css(SEQ[2]), css(SEQ[3]), css(SEQ[4]), css(SEQ[6])] };
+  // One diverging palette for every metric: indigo = better than the Croatian average, amber/red = worse.
+  // Each value is turned into a score where 100 = Croatia and above 100 = worse.
+  const DIV = { breaks: [80, 90, 100, 110, 125, 150], colors: ['#3a4592', '#7a86cc', '#d3d8f1', '#fbe6b4', '#f4c04e', '#e08a1e', '#b4471b'] };
+  const LEG = ['20 % i više bolje', '10–20 % bolje', '0–10 % bolje', '0–10 % lošije', '10–25 % lošije', '25–50 % lošije', '50 % i više lošije'];
+  function score(a, m = metric) {
+    if (m.k === 'risk') return a.r.risk;
+    const v = val(a, m.k), n = NAT[m.k];
+    if (m.k === 'growth') return 100 * (1 + v / 100) / (1 + n / 100);
+    return m.good === 'high' ? 100 * n / Math.max(v, 1e-9) : 100 * v / n;
   }
+  function classes() { return DIV; }
   function colorOf(v, sc) {
     let i = 0;
     while (i < sc.breaks.length && v >= sc.breaks[i]) i++;
@@ -115,7 +119,7 @@
     const sc = classes(metric);
     for (const p of paths) {
       const a = byId.get(p.dataset.a);
-      p.setAttribute('fill', colorOf(val(a), sc));
+      p.setAttribute('fill', colorOf(score(a), sc));
       p.classList.toggle('sel', !!selected && selected.id === a.id);
     }
     // keep selected on top
@@ -130,14 +134,8 @@
       gLabels.appendChild(t);
     }
     // legend
-    let rows = '';
-    const f = v => nf(v, metric.div ? 0 : metric.d);
-    sc.colors.forEach((c, i) => {
-      const lo = i === 0 ? null : sc.breaks[i - 1], hi = i < sc.breaks.length ? sc.breaks[i] : null;
-      const txt = lo == null ? `manje od ${f(hi)}` : hi == null ? `${f(lo)} i više` : `${f(lo)} – ${f(hi)}`;
-      if (metric.div || true) rows += `<div class="row"><span class="sw" style="background:${c}"></span>${txt}</div>`;
-    });
-    $('#legend').innerHTML = `<div class="t">${esc(metric.t)}${metric.u ? ' (' + metric.u + ')' : ''}</div>${rows}<div class="row" style="margin-top:4px;color:var(--muted)">Hrvatska: ${fmtV(NAT[metric.k])}</div>`;
+    const rows = sc.colors.map((c, i) => `<div class="row"><span class="sw" style="background:${c}"></span>${LEG[i]}</div>`).slice().reverse().join('');
+    $('#legend').innerHTML = `<div class="t">${esc(metric.t)}</div><div class="row" style="color:var(--muted);margin-bottom:2px">u odnosu na prosjek Hrvatske</div>${rows}<div class="row" style="margin-top:4px;color:var(--muted)">Hrvatska: ${fmtV(NAT[metric.k])}</div>`;
     $('#metricNote').textContent = metric.note;
   }
 
@@ -453,7 +451,7 @@
   const hb = $('#herobg');
   hb.setAttribute('viewBox', `0 0 ${G.w} ${G.h}`);
   const sc0 = classes(METRICS[0]);
-  hb.innerHTML = G.shapes.map(s => `<path d="${s.d}" fill="${colorOf(byId.get(s.a).r.risk, sc0)}" fill-opacity=".5" stroke="#0e0f13" stroke-width="1.2"/>`).join('');
+  hb.innerHTML = G.shapes.map(s => `<path d="${s.d}" fill="${colorOf(score(byId.get(s.a), METRICS[0]), sc0)}" fill-opacity=".5" stroke="#0e0f13" stroke-width="1.2"/>`).join('');
 
   paint();
   renderPanel();
