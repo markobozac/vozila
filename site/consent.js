@@ -1,7 +1,7 @@
 // Google Analytics 4, loaded only after the visitor accepts cookies.
 (function () {
   'use strict';
-  var GA_ID = 'G-XXXXXXXXXX';
+  var GA_ID = 'G-VV278QCV6J';
   var KEY = 'vozila_consent'; // 'yes' | 'no'
   var loaded = false;
   var queue = [];
