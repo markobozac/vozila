@@ -345,14 +345,27 @@
       return `<div class="oprow${hl ? ' hl' : ''}"><span class="nm">${esc(nm)}<span class="where">${nf(i.prem2025 / 1e6, 1)} mil. € · ${sgn(100 * (i.prem2025 / i.prem2024 - 1))} %</span></span><span class="barw"><span class="bar" style="width:${100 * i.prem2025 / maxP}%"></span></span><span class="val">${pct(100 * i.prem2025 / insTot)}</span></div>`;
     }).join('');
   const coI = D.insurers.find(i => shortName(i.name) === 'Croatia osiguranje');
-  const cm = D.coMotor, mm = D.mktMotor;
-  const coShare = (y, k) => 100 * cm[y][k].written * 1000 / mm[y][k].prem;
+  const cm = D.coMotor;
+  const SM = Object.entries(D.sfcrMotor).map(([n, v]) => ({ n, ao: v.ao, kasko: v.kasko }));
+  const smTot = { ao: SM.reduce((s, x) => s + x.ao, 0), kasko: SM.reduce((s, x) => s + x.kasko, 0) };
+  SM.forEach(x => { x.aoSh = 100 * x.ao / smTot.ao; x.kSh = 100 * x.kasko / smTot.kasko; });
+  SM.sort((a, b) => b.aoSh - a.aoSh);
+  const rank = (k, n) => SM.slice().sort((a, b) => b[k] - a[k]).findIndex(x => x.n === n) + 1;
+  const coS = SM.find(x => x.n === 'Croatia osiguranje');
+  const maxSh = Math.max(...SM.map(x => Math.max(x.aoSh, x.kSh)));
+  $('#motorChart').innerHTML = `<div class="mhead"><span>Društvo</span><span>Autoodgovornost</span><span>Kasko</span></div>` +
+    SM.map(x => `<div class="mrow${x.n === 'Croatia osiguranje' ? ' hl' : ''}"><span class="nm">${esc(x.n)}<span class="where">AO ${nf(x.ao / 1000, 1)} mil. € · kasko ${nf(x.kasko / 1000, 1)} mil. €</span></span>` +
+      `<span class="mb"><span class="bar ao" style="width:${100 * x.aoSh / maxSh}%"></span><b>${pct(x.aoSh)}</b></span>` +
+      `<span class="mb"><span class="bar ks" style="width:${100 * x.kSh / maxSh}%"></span><b>${pct(x.kSh)}</b></span></div>`).join('') +
+    `<div class="mrow tot"><span class="nm">Ukupno</span><span class="mb"><b>${nf(smTot.ao / 1000, 1)} mil. €</b></span><span class="mb"><b>${nf(smTot.kasko / 1000, 1)} mil. €</b></span></div>`;
   $('#coKpis').innerHTML = [
     kpi(pct(100 * coI.prem2025 / insTot), 'Croatia osiguranje: udio u neživotnoj premiji', `1. mjesto · 2024.: ${pct(100 * coI.prem2024 / insTot24)}`),
-    kpi('≈ ' + pct(coShare(2025, 'ao'), 0), 'udio u autoodgovornosti (2025.)', `${nf(cm[2025].ao.written / 1000, 1)} mil. € premije, ${sgn(100 * (cm[2025].ao.written / cm[2024].ao.written - 1))} %`),
-    kpi('≈ ' + pct(coShare(2025, 'kasko'), 0), 'udio u kasku (2025.)', `${nf(cm[2025].kasko.written / 1000, 1)} mil. € premije, ${sgn(100 * (cm[2025].kasko.written / cm[2024].kasko.written - 1))} %`),
+    kpi(pct(coS.aoSh), 'udio u autoodgovornosti (2025.)', `${rank('aoSh', coS.n)}. mjesto · ${nf(coS.ao / 1000, 1)} mil. €, ${sgn(100 * (cm[2025].ao.written / cm[2024].ao.written - 1))} % u odnosu na 2024.`),
+    kpi(pct(coS.kSh), 'udio u kasku (2025.)', `${rank('kSh', coS.n)}. mjesto · ${nf(coS.kasko / 1000, 1)} mil. €, ${sgn(100 * (cm[2025].kasko.written / cm[2024].kasko.written - 1))} %`),
     kpi(pct(100 * cm[2025].ao.incurred / cm[2025].ao.earned, 0), 'AO: nastale štete / zarađena premija', `2024.: ${pct(100 * cm[2024].ao.incurred / cm[2024].ao.earned, 0)} · kasko 2025.: ${pct(100 * cm[2025].kasko.incurred / cm[2025].kasko.earned, 0)}`),
   ].join('');
+  const agramAo = SM.filter(x => ['Adriatic', 'Euroherc'].includes(x.n)).reduce((s, x) => s + x.aoSh, 0);
+  const mm = D.mktMotor;
   const agram = D.insurers.filter(i => ['Euroherc', 'Adriatic', 'Agram Life'].includes(shortName(i.name))).reduce((s, i) => s + i.prem2025, 0);
 
   const c0 = cars[0], cL = cars[cars.length - 1];
@@ -362,7 +375,7 @@
     `Nakon liberalizacije tržišta autoodgovornosti, koja je počela ulaskom u EU, premija je pala s ${nf(i13.ao.prem, 0)} mil. € (2013.) na ${nf(i16.ao.prem, 0)} mil. € (2016.). Od 2020. ponovno brzo raste i 2025. iznosi <b>${nf(i25.ao.prem, 0)} mil. €</b>.`,
     `Za osobne automobile prosječna premija AO porasla je s ${nf(c0.prem / c0.pol)} € (${c0.y}.) na <b>${nf(cL.prem / cL.pol)} €</b> (${cL.y}.), a prosječna isplaćena šteta s ${nf(c0.paid / c0.claims)} € na <b>${nf(cL.paid / cL.claims)} €</b>. Broj isplaćenih šteta porastao je s ${nf(100 * c0.claims / c0.pol, 1)} na ${nf(100 * cL.claims / cL.pol, 1)} na 100 polica.`,
     `U 2024. osiguratelji su isplatili ${nf(i24.ao.claims)} šteta iz autoodgovornosti, a policija je evidentirala ${nf(n.acc24)} prometnih nesreća. Većina manjih sudara nikad ne uđe u policijsku statistiku, pa su podaci osiguratelja o štetama precizniji izvor za procjenu rizika po području od javnih podataka.`,
-    `Croatia osiguranje drži ${pct(100 * coI.prem2025 / insTot)} neživotne premije i oko ${pct(coShare(2025, 'kasko'), 0)} kaska, ali tek oko ${pct(coShare(2025, 'ao'), 0)} autoodgovornosti. Društva Grupe Agram (Euroherc, Adriatic, Agram Life) zajedno imaju ${pct(100 * agram / insTot)} neživotne premije. Udjeli Croatia osiguranja u AO i kasku su procjena: zaračunata premija iz SFCR-a stavljena je u odnos s naplaćenom premijom tržišta iz statistike HANFA-e.`,
+    `U autoodgovornosti vode Adriatic (${pct(SM[0].aoSh)}) i Euroherc (${pct(SM[1].aoSh)}), oba iz Grupe Agram, koja tako drži ${pct(agramAo)} tržišta AO. Croatia osiguranje je treća s ${pct(coS.aoSh)}, ali vodi u kasku s ${pct(coS.kSh)}. Društva Grupe Agram (Euroherc, Adriatic, Agram Life) zajedno imaju ${pct(100 * agram / insTot)} cijele neživotne premije.`,
     `Autoodgovornost se i dalje prodaje uglavnom uživo: ${pct(100 * ch.internal / ch.total, 0)} premije ide kroz vlastitu prodaju osiguratelja, ${pct(100 * ch.agencies / ch.total, 0)} kroz agencije (uključujući one na stanicama za tehnički pregled), a digitalnim kanalima tek ${pct(100 * ch.digital / ch.total, 1)} (2025.).`,
   ].map(s => `<li>${s}</li>`).join('');
 
@@ -388,8 +401,8 @@
       list: altS.slice(0, 5), k: 'altPct' },
     { n: 'Osiguranje', h: `Šteta iz autoodgovornosti skuplja je ${nf(100 * (avgClaim(i25) / avgClaim(i22) - 1), 0)} % nego 2022.`,
       p: `Prosječna isplaćena šteta porasla je s ${nf(avgClaim(i22))} € na ${nf(avgClaim(i25))} €, a premija po polici s ${nf(avgPrem(i22))} € na ${nf(avgPrem(i25))} €. Na svaki euro premije AO u 2025. isplaćeno je ${nf(i25.ao.paid / i25.ao.prem, 2)} € šteta, uz troškove prodaje i pričuve.` },
-    { n: 'Croatia osiguranje', h: 'Lider u neživotu i kasku, slabiji u autoodgovornosti',
-      p: `Croatia osiguranje ima ${pct(100 * coI.prem2025 / insTot)} neživotne premije i oko ${pct(coShare(2025, 'kasko'), 0)} tržišta kaska, ali oko ${pct(coShare(2025, 'ao'), 0)} autoodgovornosti, najveće vrste neživotnog osiguranja (${pct(100 * mm[2025].ao.prem / insTot, 0)} premije). Cijena AO ovisi o riziku vozača, vozila i područja, pa je bolja procjena rizika po području, poput one na karti, izravno povezana s rastom udjela.` },
+    { n: 'Croatia osiguranje', h: 'Prva u neživotu i kasku, treća u autoodgovornosti',
+      p: `Croatia osiguranje ima ${pct(100 * coI.prem2025 / insTot)} neživotne premije i ${pct(coS.kSh)} kaska, ali ${pct(coS.aoSh)} autoodgovornosti, iza Adriatica (${pct(SM[0].aoSh)}) i Euroherca (${pct(SM[1].aoSh)}). AO je najveća vrsta neživotnog osiguranja (${pct(100 * mm[2025].ao.prem / insTot, 0)} premije). Cijena AO ovisi o riziku vozača, vozila i područja, pa je bolja procjena rizika po području, poput one na karti, izravno povezana s rastom udjela.` },
   ];
   $('#insights').innerHTML = cards.map(c => `<article class="card"><span class="n">${c.n}</span><h3>${esc(c.h)}</h3><p>${c.p}</p>` +
     (c.list ? `<ol>${c.list.map(a => `<li>${btn(a)} · ${c.k ? fmtV(a.r[c.k], METRICS.find(m => m.k === c.k)) : nf(a.r.risk)}</li>`).join('')}</ol>` : '') + `</article>`).join('');
@@ -442,7 +455,7 @@
     'Državni zavod za statistiku: Registrirana cestovna vozila i cestovne prometne nesreće u 2025. (TRAN-2026-1-2); Obujam cestovnog prometa domaćih vozila u 2024. (TRAN-2026-1-3)',
     'HANFA: Statistika osiguranja 2018.–2025. i vremenske serije broja osiguranja, premija, broja šteta i likvidiranih šteta (2008.–2025.)',
     'HANFA: revidirani pojedinačni podaci društava za osiguranje na dan 31. 12. 2024. i 2025. (naplaćena premija neživotnih osiguranja po društvu)',
-    'CROATIA osiguranje d.d.: Izvješće o solventnosti i financijskom stanju za 2024. i 2025., obrazac S.05.01.02 (premije i štete autoodgovornosti i kaska)',
+    'Izvješća o solventnosti i financijskom stanju (SFCR) za 2025., obrazac S.05.01.02: Adriatic, Allianz, Croatia osiguranje (i 2024.), Euroherc, Generali, GRAWE, HOK, Triglav, UNIQA, Wiener',
     'Granice županija: Eurostat GISCO, NUTS 2024 (razina 3)',
   ];
   $('#sources').innerHTML = SRC.map(s => `<li>${esc(s)}</li>`).join('');

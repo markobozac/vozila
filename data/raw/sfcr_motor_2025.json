@@ -1,0 +1,15 @@
+{
+  "_source": "Izvješća o solventnosti i financijskom stanju (SFCR) za 2025., obrazac S.05.01.02, R0110 'Zaračunate premije – Bruto – izravno osiguranje', C0040 osiguranje od odgovornosti za uporabu motornih vozila (ao), C0050 ostale vrste osiguranja za motorna vozila (kasko). Iznosi u 000 EUR.",
+  "insurers": {
+    "Adriatic":           {"ao": 166901, "kasko": 45173,  "url": "https://www.adriatic-osiguranje.hr/dokumenti/publikacije/2025/Izvjesce_o_solventnosti_i_financijskom_stanju_za_2025.pdf"},
+    "Euroherc":           {"ao": 153787, "kasko": 64819,  "url": "https://www.euroherc.hr/uploads/financijska-izvjesca/2025/EH_SFCR_2025.pdf"},
+    "Croatia osiguranje": {"ao": 113380, "kasko": 104589, "url": "https://media.crosig.hr/kompanija/uploads/SFCR_CO_d_d_2025_potpisano_da49e94f3e.pdf"},
+    "Generali":           {"ao": 40773,  "kasko": 26567,  "url": "https://generali.hr/izvjesce-o-solventosti-i-financijskom-stanju"},
+    "Triglav":            {"ao": 31411,  "kasko": 20971,  "url": "https://www.triglav.hr/o-nama/financijska-izvjesca"},
+    "Allianz":            {"ao": 28763,  "kasko": 32382,  "url": "https://www.allianz.hr/content/dam/onemarketing/cee/azhr/privatni/hr/files/pdfs/uprava/financijska-izvje%C5%A1%C4%87a/2025/10-2026-2R_AZHR_SFCR_2025.pdf"},
+    "HOK":                {"ao": 26049,  "kasko": 16211,  "url": "https://www.hok-osiguranje.hr/wp-content/uploads/2026/04/Izvjesce-o-solventnosti-i-financijskom-stanju-2025.pdf"},
+    "Wiener":             {"ao": 23706,  "kasko": 11511,  "url": "https://www.wiener.hr/EasyEdit/UserFiles/financijski-izvjestaji/2025/wiener-osiguranjesfcr2025final.pdf"},
+    "UNIQA":              {"ao": 16049,  "kasko": 17221,  "url": "https://www.uniqa.hr/pub/media/wysiwyg/Hrvatska_brosure/UNIQA_OSIGURANJE_DOKUMENTI/IZvjesce_o_solventosti_i_financijskom_stanju/2025/UNIQA_SFCR-2025.pdf"},
+    "GRAWE":              {"ao": 15580,  "kasko": 7838,   "url": "https://www.grawe.hr/fileadmin/grawe_hr/Downloads/Godisnja_izvjesca/Godisnja_izvjesca_2025/Izvjestaj_o_solventnosti_i_financijskom_stanju_GRAWE_Hrvatska_za_2025.pdf"}
+  }
+}

@@ -405,6 +405,7 @@ for y, fname in ((2023, 'statistika_osiguranja_2023.xlsx'), (2024, 'statistika_o
             mkt_motor.setdefault(y, {})['ao' if r[0] == '04' else 'kasko'] = {'pol': r[2], 'prem': r[3], 'claims': r[4], 'paid': r[5]}
 co = json.load(open(os.path.join(RAW, 'co_sfcr_motor.json'), encoding='utf-8'))
 co_motor = {y: co[str(y)] for y in (2024, 2025)}
+sfcr_motor = json.load(open(os.path.join(RAW, 'sfcr_motor_2025.json'), encoding='utf-8'))['insurers']
 
 # ---------------------------------------------------------------- geometry
 geo = json.load(open(os.path.join(RAW, 'hr_nuts3_01m.geojson'), encoding='utf-8'))
@@ -485,7 +486,7 @@ D = {
     'tp': clean(tp_total), 'reg': reg_tot,
     'stations': [{k: s[k] for k in ('code', 'town', 'pu', 'n', 'fail')} for s in stations],
     'age': age, 'newused': newused, 'evNat': ev_nat, 'ages22': ages22, 'defects': defects, 'vkm': vkm, 'cars25': cars25,
-    'ins': ins, 'insurers': sorted(insurers.values(), key=lambda d: -d['prem2025']), 'mktMotor': mkt_motor, 'coMotor': co_motor, 'aoCars': clean(ao_cars), 'aoGroups25': clean(ao_groups25), 'kasko25': clean(kasko25), 'aoChannels25': clean(ao_channels25),
+    'ins': ins, 'insurers': sorted(insurers.values(), key=lambda d: -d['prem2025']), 'mktMotor': mkt_motor, 'coMotor': co_motor, 'sfcrMotor': sfcr_motor, 'aoCars': clean(ao_cars), 'aoGroups25': clean(ao_groups25), 'kasko25': clean(kasko25), 'aoChannels25': clean(ao_channels25),
     'geo': {'w': W, 'h': H, 'shapes': shapes},
 }
 os.makedirs(os.path.dirname(OUT), exist_ok=True)

@@ -15,6 +15,7 @@ Karta rizika u prometu po županijama (učestalost nesreća, težina posljedica,
 | HANFA | statistika osiguranja 2018.–2025., vremenske serije A-3 do A-6 | `data/raw/statistika*.xlsx`, `data/raw/a-0*.xlsx` |
 | HANFA | revidirani pojedinačni podaci 2024., 2025. (premija neživota po društvu) | `data/raw/rev_*.xlsx` |
 | CROATIA osiguranje | SFCR 2024., 2025., S.05.01.02 (motorna vozila) | `data/raw/co_sfcr_motor.json` |
+| SFCR 10 osiguratelja | 2025., S.05.01.02, zaračunata premija AO i kaska po društvu | `data/raw/sfcr_motor_2025.json` |
 | Eurostat GISCO | NUTS 2024, razina 3 (županije) | `data/raw/hr_nuts3_01m.geojson` |
 
 ## Struktura
