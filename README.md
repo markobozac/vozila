@@ -13,6 +13,8 @@ Karta rizika u prometu po županijama (učestalost nesreća, težina posljedica,
 | CVH (data.gov.hr) | vozila po županijama i gorivu 2015.–2022., prosječna starost, nova i rabljena, električna i hibridna, neispravnosti po sklopovima | `data/raw/cvh/CSV/*.csv`, `data/raw/*.csv` |
 | DZS | TRAN-2026-1-2 (registrirana vozila 2025.), TRAN-2026-1-3 (vozilo-kilometri 2024.) | `data/raw/tran-*.xlsx` |
 | HANFA | statistika osiguranja 2018.–2025., vremenske serije A-3 do A-6 | `data/raw/statistika*.xlsx`, `data/raw/a-0*.xlsx` |
+| HANFA | revidirani pojedinačni podaci 2024., 2025. (premija neživota po društvu) | `data/raw/rev_*.xlsx` |
+| CROATIA osiguranje | SFCR 2024., 2025., S.05.01.02 (motorna vozila) | `data/raw/co_sfcr_motor.json` |
 | Eurostat GISCO | NUTS 2024, razina 3 (županije) | `data/raw/hr_nuts3_01m.geojson` |
 
 ## Struktura

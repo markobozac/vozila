@@ -242,3 +242,40 @@ td.num-bad { color: var(--bad); font-weight: 600; }
 .mchart.lc text { font-size: 12px; }
 #map text.lbl { font-size: 19px; stroke-width: 4px; }
 @media (max-width: 600px) { .herofig { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; } .herofig b { font-size: 1.3rem; } }
+
+/* ---- vozila palette: asphalt, indigo and signal amber (distinct from /turizam teal) ---- */
+:root {
+  --bg: #f5f4f1; --surface: #ffffff; --ink: #1a1d24; --muted: #5e6270; --line: #e0ded8;
+  --accent: #b06a00; --amber: #e8a317; --signal: #c4361f;
+  --sea-0: #eef0fa; --sea-1: #d3d8f1; --sea-2: #a9b2e2; --sea-3: #7a86cc; --sea-4: #5361b3; --sea-5: #3a4592; --sea-6: #262e66;
+  --nodata: #ebe9e4; --good: #2f7d5b; --bad: #c4361f; --neu: #e9e6df;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121318; --surface: #1b1d24; --ink: #ecebe7; --muted: #a2a3ad; --line: #2c2f38; --accent: #f0b23c; --amber: #f0b23c; --signal: #ef6a4f;
+    --sea-0: #20233a; --sea-1: #2b3160; --sea-2: #3a4592; --sea-3: #5361b3; --sea-4: #7a86cc; --sea-5: #a9b2e2; --sea-6: #d3d8f1;
+    --nodata: #23252c; --good: #5cbf8f; --bad: #ef6a4f; --neu: #2a2c33;
+  }
+}
+.top { background: radial-gradient(120% 140% at 85% 25%, #2b2f3d 0%, #1a1d24 50%, #0e0f13 100%); }
+.top::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; z-index: 2;
+  background: repeating-linear-gradient(90deg, var(--amber) 0 48px, transparent 48px 72px); opacity: .9; }
+.top::after { background: linear-gradient(90deg, rgba(14,15,19,.94) 0%, rgba(14,15,19,.62) 42%, rgba(14,15,19,0) 75%); }
+@media (max-width: 700px) { .top::after { background: linear-gradient(180deg, rgba(14,15,19,.55), rgba(14,15,19,.82)); } }
+.lede, .herofig { color: #d6d4cd; }
+.herofig b { color: var(--amber); }
+.card .n { color: var(--accent); }
+.metric-tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); box-shadow: inset 0 -3px 0 var(--amber); }
+.mchart .ln3, .mchart .ln { stroke: var(--amber); }
+.mchart .dot { fill: var(--amber); }
+.mchart .bar2 { fill: var(--amber); }
+.mchart .bar { fill: var(--sea-4); }
+.mchart .bar3 { fill: var(--sea-2); }
+.ibar .track i { background: var(--sea-4); }
+.ibar .track i.hi { background: var(--signal); }
+.oprow .bar { background: var(--sea-3); }
+.oprow.hl .bar { background: var(--amber); }
+.oprow.hl .nm { font-weight: 700; }
+.tkpis.co { margin-top: 14px; }
+.tkpis.co .kpi { border-top: 3px solid var(--amber); }
+#map path.u.sel { stroke: var(--ink); stroke-width: 2.6; }

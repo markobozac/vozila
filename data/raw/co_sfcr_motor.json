@@ -1,0 +1,6 @@
+{
+  "_source": "CROATIA osiguranje d.d., Izvješće o solventnosti i financijskom stanju (SFCR) 2024. i 2025., obrazac S.05.01.02, zaračunate premije bruto – izravno osiguranje (R0110), nastali odštetni zahtjevi bruto – izravno (R0310), zarađene premije bruto – izravno (R0210); u 000 EUR",
+  "_urls": ["https://media.crosig.hr/kompanija/uploads/SFCR_CO_d_d_2025_potpisano_da49e94f3e.pdf", "https://media.crosig.hr/kompanija/uploads/SFCR_CO_d_d_2024_d6d06bddd4.pdf"],
+  "2024": {"ao": {"written": 104463, "earned": 99106, "incurred": 45251}, "kasko": {"written": 90207, "earned": 85323, "incurred": 52766}},
+  "2025": {"ao": {"written": 113380, "earned": 108317, "incurred": 58797}, "kasko": {"written": 104589, "earned": 96280, "incurred": 53733}}
+}

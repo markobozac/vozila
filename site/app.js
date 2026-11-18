@@ -39,7 +39,7 @@
   const SEQ = ['--sea-0', '--sea-1', '--sea-2', '--sea-3', '--sea-4', '--sea-5', '--sea-6'];
   const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   function classes(m) {
-    if (m.div) return { breaks: [80, 90, 100, 110, 125, 150], colors: ['#2f6f8f', '#7fb0c6', '#cfe0e6', '#f3d2b3', '#e39a5c', '#c2611f', '#8a3510'], labels: null };
+    if (m.div) return { breaks: [80, 90, 100, 110, 125, 150], colors: ['#3a4592', '#7a86cc', '#d3d8f1', '#fbe6b4', '#f4c04e', '#e08a1e', '#b4471b'], labels: null };
     const vs = A.map(a => val(a, m.k)).sort((x, y) => x - y);
     const q = p => vs[Math.min(vs.length - 1, Math.floor(p * vs.length))];
     const breaks = [q(.2), q(.4), q(.6), q(.8)];
@@ -176,7 +176,7 @@
       `<text x="${pad}" y="${h - 2}">${years[0]}.</text><text x="${w - pad}" y="${h - 2}" text-anchor="end">${years[years.length - 1]}.</text>` +
       `<text x="${pad}" y="${y(series[0]) - 5}">${nf(series[0])}</text><text x="${w - pad}" y="${y(series[series.length - 1]) - 6}" text-anchor="end">${nf(series[series.length - 1])}</text></svg>`;
   }
-  const FUELC = [['benz', 'Benzin', 'var(--sea-2)'], ['dies', 'Dizel', 'var(--sea-5)'], ['hyb', 'Hibrid', '#e39a5c'], ['phev', 'Plug-in hibrid', '#c2611f'], ['ev', 'Električni', '#2c7a4b']];
+  const FUELC = [['benz', 'Benzin', 'var(--sea-2)'], ['dies', 'Dizel', 'var(--sea-5)'], ['hyb', 'Hibrid', '#f4c04e'], ['phev', 'Plug-in hibrid', '#e08a1e'], ['ev', 'Električni', '#2f7d5b']];
   function fuelBar(f) {
     const t = f.tot;
     return `<div class="fuelbar">${FUELC.map(([k, , c]) => `<span style="width:${100 * f[k] / t}%;background:${c}" title="${k}"></span>`).join('')}</div>` +
@@ -290,10 +290,10 @@
   lineChart($('#chAge'), { label: 'Prosječna starost osobnih automobila', x: ageY.map(r => r.y + '.'), series: [{ cls: 'ln3', v: ageY.map(r => r.m1) }], min: 8, yf: t => nf(t, 0), lf: v => nf(v, 1) });
   const nu = D.newused.filter(r => r.y >= 2010);
   barChart($('#chNewUsed'), { label: 'Prve registracije osobnih automobila', x: nu.map(r => "'" + String(r.y).slice(2)), series: [{ name: 'nova', cls: 'bar', v: nu.map(r => r.new / 1000) }, { name: 'rabljena', cls: 'bar2', v: nu.map(r => r.used / 1000) }], yf: t => nf(t), allX: true });
-  legend('#lgNewUsed', [['Nova', 'var(--sea-3)'], ['Rabljena (uvoz)', 'var(--accent)']]);
+  legend('#lgNewUsed', [['Nova', 'var(--sea-4)'], ['Rabljena (uvoz)', 'var(--amber)']]);
   const ev = D.evNat.filter(r => r.y >= 2014);
   barChart($('#chEv'), { label: 'Električni i hibridni osobni automobili', x: ev.map(r => "'" + String(r.y).slice(2)), series: [{ name: 'hibridni', cls: 'bar3', v: ev.map(r => r.hyb / 1000) }, { name: 'plug-in hibridni', cls: 'bar2', v: ev.map(r => r.phev / 1000) }, { name: 'električni', cls: 'bar', v: ev.map(r => r.ev / 1000) }], yf: t => nf(t), labels: true, lf: v => nf(v, v < 10 ? 1 : 0), allX: true });
-  legend('#lgEv', [['Hibridni', 'var(--sea-1)'], ['Plug-in hibridni', 'var(--accent)'], ['Električni', 'var(--sea-3)']]);
+  legend('#lgEv', [['Hibridni', 'var(--sea-2)'], ['Plug-in hibridni', 'var(--amber)'], ['Električni', 'var(--sea-4)']]);
   const va = D.vkm.byAge;
   barChart($('#chVkmAge'), { label: 'Vozilo-kilometri po starosti', x: ['< 2 g.', '2–4 g.', '5–9 g.', '10–19 g.', '20+ g.'], series: [{ name: 'mil. vkm', cls: 'bar', v: Object.values(va) }], labels: true, allX: true, lf: v => nf(v) });
   const vf = D.vkm.byFuel;
@@ -316,9 +316,9 @@
   const ins = D.ins;
   const iy = ins.map(r => "'" + String(r.y).slice(2));
   lineChart($('#chAo'), { label: 'Autoodgovornost premija i štete', x: iy, series: [{ cls: 'ln2', v: ins.map(r => r.ao.prem) }, { cls: 'ln3', v: ins.map(r => r.ao.paid) }], brk: "'23", yf: t => nf(t), lf: v => nf(v) });
-  legend('#lgAo', [['Premija', 'var(--sea-4)'], ['Isplaćene štete', 'var(--accent)']]);
+  legend('#lgAo', [['Premija', 'var(--sea-4)'], ['Isplaćene štete', 'var(--amber)']]);
   lineChart($('#chKasko'), { label: 'Kasko premija i štete', x: iy, series: [{ cls: 'ln2', v: ins.map(r => r.kasko.prem) }, { cls: 'ln3', v: ins.map(r => r.kasko.paid) }], brk: "'23", yf: t => nf(t), lf: v => nf(v) });
-  legend('#lgKasko', [['Premija', 'var(--sea-4)'], ['Isplaćene štete', 'var(--accent)']]);
+  legend('#lgKasko', [['Premija', 'var(--sea-4)'], ['Isplaćene štete', 'var(--amber)']]);
 
   const i22 = ins.find(r => r.y === 2022), i25 = lastIns, i13 = ins.find(r => r.y === 2013), i16 = ins.find(r => r.y === 2016);
   const avgClaim = r => 1e6 * r.ao.paid / r.ao.claims, avgPrem = r => 1e6 * r.ao.prem / r.ao.pol;
@@ -336,6 +336,27 @@
   $('#aoGroupsTable').innerHTML = `<thead><tr class="nohover"><th>Skupina vozila</th><th>Police</th><th>Prosječna premija</th><th>Štete na 100 polica</th><th>Prosječna šteta</th><th>Štete / premija</th></tr></thead><tbody>` +
     grp.map(g => `<tr class="nohover"><td>${esc(g.g)}</td><td>${nf(g.pol)}</td><td>${nf(g.prem / g.pol)} €</td><td>${nf(100 * g.claims / g.pol, 1)}</td><td>${nf(g.paid / g.claims)} €</td><td>${pct(100 * g.paid / g.prem, 0)}</td></tr>`).join('') + '</tbody>';
 
+  // ---------- insurers + Croatia osiguranje
+  const SHORT = { croa: 'Croatia osiguranje', euro: 'Euroherc', adri: 'Adriatic', alli: 'Allianz', gene: 'Generali', wien: 'Wiener', uniq: 'UNIQA', trig: 'Triglav', hoko: 'HOK', graw: 'GRAWE', agra: 'Agram Life', merk: 'Merkur', hrva: 'Hrvatsko kreditno' };
+  const shortName = nm => { const k = nm.toLowerCase().replace(/[^a-z]/g, '').slice(0, 4); return SHORT[k] || nm; };
+  const insTot = D.insurers.reduce((s, i) => s + i.prem2025, 0), insTot24 = D.insurers.reduce((s, i) => s + i.prem2024, 0);
+  const maxP = Math.max(...D.insurers.map(i => i.prem2025));
+  $('#insurersChart').innerHTML = `<div class="ophead"><span>Društvo</span><span>Naplaćena premija neživota 2025.</span><span class="val">Udio</span></div>` +
+    D.insurers.filter(i => i.prem2025 > 5e6).map(i => {
+      const nm = shortName(i.name), hl = nm === 'Croatia osiguranje';
+      return `<div class="oprow${hl ? ' hl' : ''}"><span class="nm">${esc(nm)}<span class="where">${nf(i.prem2025 / 1e6, 1)} mil. € · ${sgn(100 * (i.prem2025 / i.prem2024 - 1))} %</span></span><span class="barw"><span class="bar" style="width:${100 * i.prem2025 / maxP}%"></span></span><span class="val">${pct(100 * i.prem2025 / insTot)}</span></div>`;
+    }).join('');
+  const coI = D.insurers.find(i => shortName(i.name) === 'Croatia osiguranje');
+  const cm = D.coMotor, mm = D.mktMotor;
+  const coShare = (y, k) => 100 * cm[y][k].written * 1000 / mm[y][k].prem;
+  $('#coKpis').innerHTML = [
+    kpi(pct(100 * coI.prem2025 / insTot), 'Croatia osiguranje: udio u neživotnoj premiji', `1. mjesto · 2024.: ${pct(100 * coI.prem2024 / insTot24)}`),
+    kpi('≈ ' + pct(coShare(2025, 'ao'), 0), 'udio u autoodgovornosti (2025.)', `${nf(cm[2025].ao.written / 1000, 1)} mil. € premije, ${sgn(100 * (cm[2025].ao.written / cm[2024].ao.written - 1))} %`),
+    kpi('≈ ' + pct(coShare(2025, 'kasko'), 0), 'udio u kasku (2025.)', `${nf(cm[2025].kasko.written / 1000, 1)} mil. € premije, ${sgn(100 * (cm[2025].kasko.written / cm[2024].kasko.written - 1))} %`),
+    kpi(pct(100 * cm[2025].ao.incurred / cm[2025].ao.earned, 0), 'AO: nastale štete / zarađena premija', `2024.: ${pct(100 * cm[2024].ao.incurred / cm[2024].ao.earned, 0)} · kasko 2025.: ${pct(100 * cm[2025].kasko.incurred / cm[2025].kasko.earned, 0)}`),
+  ].join('');
+  const agram = D.insurers.filter(i => ['Euroherc', 'Adriatic', 'Agram Life'].includes(shortName(i.name))).reduce((s, i) => s + i.prem2025, 0);
+
   const c0 = cars[0], cL = cars[cars.length - 1];
   const ch = D.aoChannels25;
   const i24 = ins.find(r => r.y === 2024);
@@ -343,6 +364,7 @@
     `Nakon liberalizacije tržišta autoodgovornosti, koja je počela ulaskom u EU, premija je pala s ${nf(i13.ao.prem, 0)} mil. € (2013.) na ${nf(i16.ao.prem, 0)} mil. € (2016.). Od 2020. ponovno brzo raste i 2025. iznosi <b>${nf(i25.ao.prem, 0)} mil. €</b>.`,
     `Za osobne automobile prosječna premija AO porasla je s ${nf(c0.prem / c0.pol)} € (${c0.y}.) na <b>${nf(cL.prem / cL.pol)} €</b> (${cL.y}.), a prosječna isplaćena šteta s ${nf(c0.paid / c0.claims)} € na <b>${nf(cL.paid / cL.claims)} €</b>. Broj isplaćenih šteta porastao je s ${nf(100 * c0.claims / c0.pol, 1)} na ${nf(100 * cL.claims / cL.pol, 1)} na 100 polica.`,
     `U 2024. osiguratelji su isplatili ${nf(i24.ao.claims)} šteta iz autoodgovornosti, a policija je evidentirala ${nf(n.acc24)} prometnih nesreća. Većina manjih sudara nikad ne uđe u policijsku statistiku, pa su podaci osiguratelja o štetama precizniji izvor za procjenu rizika po području od javnih podataka.`,
+    `Croatia osiguranje drži ${pct(100 * coI.prem2025 / insTot)} neživotne premije i oko ${pct(coShare(2025, 'kasko'), 0)} kaska, ali tek oko ${pct(coShare(2025, 'ao'), 0)} autoodgovornosti. Društva Grupe Agram (Euroherc, Adriatic, Agram Life) zajedno imaju ${pct(100 * agram / insTot)} neživotne premije. Udjeli Croatia osiguranja u AO i kasku su procjena: zaračunata premija iz SFCR-a stavljena je u odnos s naplaćenom premijom tržišta iz statistike HANFA-e.`,
     `Autoodgovornost se i dalje prodaje uglavnom uživo: ${pct(100 * ch.internal / ch.total, 0)} premije ide kroz vlastitu prodaju osiguratelja, ${pct(100 * ch.agencies / ch.total, 0)} kroz agencije (uključujući one na stanicama za tehnički pregled), a digitalnim kanalima tek ${pct(100 * ch.digital / ch.total, 1)} (2025.).`,
   ].map(s => `<li>${s}</li>`).join('');
 
@@ -368,6 +390,8 @@
       list: altS.slice(0, 5), k: 'altPct' },
     { n: 'Osiguranje', h: `Šteta iz autoodgovornosti skuplja je ${nf(100 * (avgClaim(i25) / avgClaim(i22) - 1), 0)} % nego 2022.`,
       p: `Prosječna isplaćena šteta porasla je s ${nf(avgClaim(i22))} € na ${nf(avgClaim(i25))} €, a premija po polici s ${nf(avgPrem(i22))} € na ${nf(avgPrem(i25))} €. Na svaki euro premije AO u 2025. isplaćeno je ${nf(i25.ao.paid / i25.ao.prem, 2)} € šteta, uz troškove prodaje i pričuve.` },
+    { n: 'Croatia osiguranje', h: 'Lider u neživotu i kasku, slabiji u autoodgovornosti',
+      p: `Croatia osiguranje ima ${pct(100 * coI.prem2025 / insTot)} neživotne premije i oko ${pct(coShare(2025, 'kasko'), 0)} tržišta kaska, ali oko ${pct(coShare(2025, 'ao'), 0)} autoodgovornosti, najveće vrste neživotnog osiguranja (${pct(100 * mm[2025].ao.prem / insTot, 0)} premije). Cijena AO ovisi o riziku vozača, vozila i područja, pa je bolja procjena rizika po području, poput one na karti, izravno povezana s rastom udjela.` },
   ];
   $('#insights').innerHTML = cards.map(c => `<article class="card"><span class="n">${c.n}</span><h3>${esc(c.h)}</h3><p>${c.p}</p>` +
     (c.list ? `<ol>${c.list.map(a => `<li>${btn(a)} · ${c.k ? fmtV(a.r[c.k], METRICS.find(m => m.k === c.k)) : nf(a.r.risk)}</li>`).join('')}</ol>` : '') + `</article>`).join('');
@@ -419,6 +443,8 @@
     'Centar za vozila Hrvatske (data.gov.hr): vozila po županijama i vrstama goriva 2015.–2022., prosječna starost vozila, nova i rabljena vozila, električna i hibridna vozila, neispravnosti po sklopovima',
     'Državni zavod za statistiku: Registrirana cestovna vozila i cestovne prometne nesreće u 2025. (TRAN-2026-1-2); Obujam cestovnog prometa domaćih vozila u 2024. (TRAN-2026-1-3)',
     'HANFA: Statistika osiguranja 2018.–2025. i vremenske serije broja osiguranja, premija, broja šteta i likvidiranih šteta (2008.–2025.)',
+    'HANFA: revidirani pojedinačni podaci društava za osiguranje na dan 31. 12. 2024. i 2025. (naplaćena premija neživotnih osiguranja po društvu)',
+    'CROATIA osiguranje d.d.: Izvješće o solventnosti i financijskom stanju za 2024. i 2025., obrazac S.05.01.02 (premije i štete autoodgovornosti i kaska)',
     'Granice županija: Eurostat GISCO, NUTS 2024 (razina 3)',
   ];
   $('#sources').innerHTML = SRC.map(s => `<li>${esc(s)}</li>`).join('');
@@ -427,7 +453,7 @@
   const hb = $('#herobg');
   hb.setAttribute('viewBox', `0 0 ${G.w} ${G.h}`);
   const sc0 = classes(METRICS[0]);
-  hb.innerHTML = G.shapes.map(s => `<path d="${s.d}" fill="${colorOf(byId.get(s.a).r.risk, sc0)}" fill-opacity=".55" stroke="#0f141d" stroke-width="1.2"/>`).join('');
+  hb.innerHTML = G.shapes.map(s => `<path d="${s.d}" fill="${colorOf(byId.get(s.a).r.risk, sc0)}" fill-opacity=".5" stroke="#0e0f13" stroke-width="1.2"/>`).join('');
 
   paint();
   renderPanel();
