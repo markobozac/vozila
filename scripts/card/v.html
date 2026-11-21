@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:IS;font-weight:400;src:url(instrument-sans-400.woff2)}
+@font-face{font-family:IS;font-weight:600;src:url(instrument-sans-600.woff2)}
+html,body{margin:0;width:960px;height:600px;overflow:hidden;background:#f5f4f1;font-family:IS,sans-serif}
+svg{display:block}
+</style></head><body><svg id="s" width="960" height="600" viewBox="0 0 960 600"></svg>
+<script>
+fetch('d.json').then(r=>r.json()).then(D=>{
+ const S=document.getElementById('s'), NS='http://www.w3.org/2000/svg';
+ const el=(t,a,p=S)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
+ const BR=[80,90,100,110,125,150],CO=['#3a4592','#7a86cc','#d3d8f1','#fbe6b4','#f4c04e','#e08a1e','#b4471b'];
+ const col=v=>{let i=0;while(i<BR.length&&v>=BR[i])i++;return CO[i]};
+ const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+ const mix=(a,b,t)=>{a=hex(a);b=hex(b);return 'rgb('+a.map((x,i)=>Math.round(x+(b[i]-x)*t)).join(',')+')'};
+ const ease=t=>t<0?0:t>1?1:t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+ const sc=550/D.w, g=el('g',{transform:`translate(18,${(600-D.h*sc)/2}) scale(${sc})`});
+ const xs=D.shapes.map(s=>s.lx), x0=Math.min(...xs), x1=Math.max(...xs);
+ const top=Object.entries(D.risk).sort((a,b)=>b[1]-a[1])[0][0];
+ const P=D.shapes.map(s=>({s,p:el('path',{d:s.d,stroke:'#f5f4f1','stroke-width':2.2/sc*0.9,'stroke-linejoin':'round'},g),c:col(D.risk[s.a]),k:(s.lx-x0)/(x1-x0)}));
+ const ring=el('circle',{fill:'none',stroke:'#1a1d24','stroke-width':3/sc},g);
+ const ts=P.find(q=>q.s.a===top).s;
+ el('text',{x:18,y:572,'font-size':26,fill:'#6b6e76'}).textContent='Rizik po županijama';
+ el('text',{x:610,y:96,'font-size':26,fill:'#6b6e76'}).textContent='Autoodgovornost 2025.';
+ const NAMES={'Croatia osiguranje':'Croatia osiguranje'};
+ const rows=D.ao.map(([n,v],i)=>{const y=150+i*90,co=n==='Croatia osiguranje';
+  const t=el('text',{x:610,y,'font-size':30,'font-weight':co?600:400,fill:'#1a1d24'});t.textContent=n;
+  el('rect',{x:610,y:y+14,width:320,height:30,rx:6,fill:'#e7e5df'});
+  const b=el('rect',{x:610,y:y+14,height:30,rx:6,fill:co?'#e08a1e':'#3a4592'});
+  const p=el('text',{y:y+38,'font-size':24,'font-weight':600,fill:co?'#1a1d24':'#fff'});
+  return {v,b,p,i,co}});
+ const BASE='#e2dfd8', MAX=30;
+ window.render=t=>{ // t seconds, 0..8
+  const out=ease((t-6.9)/1.0); // fade back
+  P.forEach(q=>{const f=ease((t-0.2-q.k*1.6)/0.6)*(1-out); q.p.setAttribute('fill',mix(BASE,q.c,f))});
+  const rp=(t-2.4); const ra=rp>0&&t<6.9? (rp%1.6)/1.6:0;
+  ring.setAttribute('cx',ts.lx);ring.setAttribute('cy',ts.ly);
+  ring.setAttribute('r',(10+ra*70)/sc);ring.setAttribute('opacity',rp>0&&t<6.9?(1-ra)*0.9:0);
+  rows.forEach(r=>{const f=ease((t-2.2-r.i*0.25)/1.0)*(1-out); const w=320*r.v/MAX*f;
+   r.b.setAttribute('width',Math.max(w,0.01));
+   r.p.textContent=(r.v*f).toFixed(0).replace('.',',')+' %';
+   const inside=w>90; r.p.setAttribute('x',inside?610+w-12:610+w+10); r.p.setAttribute('text-anchor',inside?'end':'start');
+   r.p.setAttribute('fill',inside?(r.co?'#1a1d24':'#fff'):'#1a1d24'); r.p.setAttribute('opacity',f>0.02?1:0)});
+ };
+ render(0); document.fonts.ready.then(()=>window.READY=1);
+});
+</script></body></html>
